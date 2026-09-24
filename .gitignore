@@ -1,0 +1,10 @@
+public/
+.firebase/
+firebase-debug*.log
+firestore.rules
+.env
+.env.*
+.DS_Store
+node_modules/
+YIL-GACHA.zip
+YIL-GACHA-offline.html
