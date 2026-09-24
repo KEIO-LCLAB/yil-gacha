@@ -5,7 +5,7 @@
 - **[ガチャを開く](https://keio-lclab.github.io/yil-gacha/)**
 - **[運営用ページを開く](https://keio-lclab.github.io/yil-gacha/admin.html)** — スタッフの端末でブックマークしてください。
 
-現在はGitHub Pagesで公開しています。旧Firebaseサイトは公開を停止し、旧設定データへのアクセスも閉じています。Firebaseプロジェクトそのものは削除していません。
+現在はGitHub Pagesで公開しています。旧Firebaseサイトは公開を停止し、旧設定データへのアクセスも閉じています。旧Firebaseプロジェクト `yil-gacha-ichii` も削除を申請し、`DELETE_REQUESTED`（削除待ち）を確認済みです。
 
 ## ブースでの使い方
 
