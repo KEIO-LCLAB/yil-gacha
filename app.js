@@ -11,7 +11,7 @@ function drawPrize(cards, rng = Math.random, max = 11) {
   const input = $('cards'), result = $('result');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const offline = location.protocol === 'file:';
-  let maxCards = 11, configReady = offline;
+  let maxCards = 11, configReady = false;
   let pendingMax = null, refreshing = false;
   let cards = 1, phase = 'ready', audio, lastDraw = null;
   function applyMax(max) {
@@ -25,9 +25,9 @@ function drawPrize(cards, rng = Math.random, max = 11) {
     render();
   }
   async function refreshSettings() {
-    if (offline || refreshing || document.hidden) return;
+    if (refreshing || document.hidden) return;
     refreshing = true;
-    try { const max = await YILConfig.read(); configReady = true; applyMax(max); $('settings-status').textContent = `現在の上限：${max}枚`; }
+    try { const max = await YILConfig.read(); configReady = true; applyMax(max); $('settings-status').textContent = YILConfig.label(max); }
     catch { configReady = false; render(); $('settings-status').textContent = '上限設定を取得できません。通信を確認して「再確認」を押してください。'; }
     finally { refreshing = false; }
   }
@@ -180,7 +180,7 @@ function drawPrize(cards, rng = Math.random, max = 11) {
   async function startDraw(shouldMix = false) {
     if (phase !== 'ready' || !configReady || !Number.isInteger(cards) || cards < 1 || cards > maxCards) return;
     phase = 'checking'; render();
-    if (!offline) {
+    {
       try {
         const fresh = await YILConfig.read();
         if (fresh !== maxCards) {
@@ -271,7 +271,7 @@ function drawPrize(cards, rng = Math.random, max = 11) {
     $('debug-text').textContent = 'clearFileProbability = round(100 × ((cards - 1) / (maxCards - 1))^1.7) / 100\n判定: Math.random() < clearFileProbability\n' + Array.from({length:maxCards}, (_,i) => `${i+1}枚: クリアファイル ${Math.round(drawProbability(i+1)*100)}% / シール ${100-Math.round(drawProbability(i+1)*100)}%`).join(' / ') + `\n状態: ${phase}` + (lastDraw ? `\n直近の抽選: ${JSON.stringify(lastDraw)}` : '\n直近の抽選: なし');
   }
   $('retry-settings').addEventListener('click', refreshSettings);
-  $('settings-status').textContent = offline ? 'オフライン版：上限11枚（管理者設定はオンライン版に反映）' : '上限設定を確認中…';
+  $('settings-status').textContent = '上限設定を確認中…';
   render(); refreshSettings();
-  if (!offline) { setInterval(refreshSettings,30000); document.addEventListener('visibilitychange',refreshSettings); }
+  setInterval(refreshSettings,30000); document.addEventListener('visibilitychange',refreshSettings); window.addEventListener('storage', refreshSettings);
 })();
